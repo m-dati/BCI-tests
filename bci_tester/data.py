@@ -158,6 +158,12 @@ MICRO_CONTAINER = create_BCI(
     image_type="kiwi",
     available_versions=[OS_VERSION],
 )
+BUSYBOX_CONTAINER = create_BCI(
+    build_tag=f"bci/bci-busybox:{OS_VERSION}",
+    image_type="kiwi",
+    available_versions=["15.4"],
+    custom_entry_point="/bin/sh",
+)
 
 GO_1_16_CONTAINER = create_BCI(
     build_tag="bci/golang:1.16", image_type="hybrid"
