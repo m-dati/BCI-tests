@@ -172,7 +172,7 @@ def test_python_webserver_2(
     # check expected file present in the bci destination
     assert container_per_test.connection.file(destdir + xfilename).exists
 
-
+@pytest.mark.skipif()
 @pytest.mark.skipif(
     # skip test if architecture is not x86.
     LOCALHOST.system_info.arch != "x86_64",
