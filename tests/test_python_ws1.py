@@ -47,7 +47,7 @@ CONTAINER_IMAGES_T = [
 @pytest.mark.parametrize(
     "container_per_test", CONTAINER_IMAGES_T, indirect=["container_per_test"]
 )
-@pytest.mark.parametrize("hmodule, port, timeout", [("http.server", 8123, 30)])
+@pytest.mark.parametrize("hmodule, port, timeout", [("http.server", 8123, 10)])
 def test_python_webserver_1(container_per_test, hmodule, port, timeout):
     """Test that the python webserver is able to open a given port"""
 
@@ -76,23 +76,27 @@ def test_python_webserver_1(container_per_test, hmodule, port, timeout):
     # race conditions prevention: port status inspection with timeout
     for t in range(timeout):
         time.sleep(1)
-        portstatus = container_per_test.connection.socket(
-            f"tcp://0.0.0.0: {port}"
-        ).is_listening
-        print(3.0,time.time()-t0)
-        if portstatus:
+        #portstatus = container_per_test.connection.socket(
+        #    f"tcp://0.0.0.0: {port}"
+        #).is_listening
+        processlist = container_per_test.connection.run_expect(
+        [0], "ps axho command"
+        )
+        print(3,t,time.time()-t0)
+        if hmodule in processlist.stdout: # portstatus:
             break
 
     print(4,time.time()-t0)
 
-    # check inspection success or timeeout
-    assert portstatus, "timeout expired: expected port not listening"
+    portstatus = container_per_test.connection.socket(
+        f"tcp://0.0.0.0: {port}"
+    ).is_listening
 
-    # collect running processes (see man ps BSD options)
-    processlist = container_per_test.connection.run_expect(
-        [0], "ps axho command"
-    )
+    print(5,time.time()-t0)
 
     # check also that server is running
     assert hmodule in processlist.stdout, f"{hmodule} not running."
+
+    # check inspection success or timeeout
+    assert portstatus, "timeout expired: expected port not listening"
 
