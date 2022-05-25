@@ -137,13 +137,17 @@ def test_python_webserver_1(container_per_test, hmodule, port, retry):
             break
 
     t2 = time.time() - t0
-
-    print("Time marks:{t1} {t2}")
-
+ 
     # check inspection success or timeout
     assert (
         portstatus
-    ), f"timeout expired elapsed {t1 - t2}s: expected port not listening"
+    ), f"Timeout expired:Before start {t1}s After {t} checks {t2}s. Expected port not listening"
+
+    x = container_per_test.connection.run_expect([0], "ps ax")
+    
+    t3 = time.time() - t0
+
+    assert hmodule in x.stdout, f"no process running, retry {t} timemarks {t1},{t2},{t3}"
 
 
 @pytest.mark.parametrize(
