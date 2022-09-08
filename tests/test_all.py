@@ -161,8 +161,8 @@ def xxxtest_certificates_are_present(
     )
 
     # XFAIL test added 8/9
-@pytest.mark.xfail(reason="Test failed for soft fail")
+# @pytest.mark.xfail(reason="Test failed for soft fail")
 def test_soft_fail_chk():
-    pass
+    pytest.xfail("Soft Fail test")
 
  

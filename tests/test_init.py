@@ -14,6 +14,10 @@ from bci_tester.runtime_choice import DOCKER_SELECTED
 
 CONTAINER_IMAGES = [INIT_CONTAINER]
 
+@pytest.mark.xfail()
+def test_soft_fail_init_chk():
+    pytest.xfail("init. Soft Fail test")
+
 
 @pytest.mark.skipif(
     DOCKER_SELECTED
