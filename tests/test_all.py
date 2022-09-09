@@ -61,6 +61,8 @@ def test_os_release(auto_container_per_test):
             ).stdout.strip()
             == value
         )
+    # XFAIL test added
+    pytest.xfail("Soft Fail test Xfail os_release")
 
 
 def test_product(auto_container_per_test):
@@ -84,7 +86,8 @@ def test_product(auto_container_per_test):
         == "/etc/products.d/SLES.prod"
     )
 
-
+# XFAIL test added
+@pytest.mark.xfail(reason="XfailXpass-coreutl",strict=False)
 @pytest.mark.parametrize(
     "container_per_test",
     [c for c in ALL_CONTAINERS if c != BUSYBOX_CONTAINER],
@@ -98,7 +101,8 @@ def test_coreutils_present(container_per_test):
     for binary in ("cat", "sh", "bash", "ls", "rm"):
         assert container_per_test.connection.exists(binary)
 
-
+# XFAIL test added
+@pytest.mark.xfail(reason="XfailXpass-glibc",strict=False)
 def test_glibc_present(auto_container_per_test):
     """ensure that the glibc linker is present"""
     for binary in ("ldconfig", "ldd"):
@@ -127,7 +131,7 @@ def test_systemd_not_installed_in_all_containers_except_init(
 
 
 @pytest.mark.parametrize("runner", ALL_CONTAINERS)
-def xxxtest_certificates_are_present(
+def test_certificates_are_present(
     host, tmp_path, container_runtime, runner: Container, pytestconfig
 ):
     """This is a multistage container build, verifying that the certificates are
@@ -160,9 +164,6 @@ def xxxtest_certificates_are_present(
         f"{container_runtime.runner_binary} run --rm {' '.join(get_extra_run_args(pytestconfig))} {img_id}",
     )
 
-    # XFAIL test added 8/9
-# @pytest.mark.xfail(reason="Test failed for soft fail")
-def test_soft_fail_chk():
-    pytest.xfail("Soft Fail test")
-
- 
+# XFAIL test added
+def test_to_xfail_chk3():
+    pytest.xfail("Soft Fail test XFAIL3")

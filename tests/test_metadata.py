@@ -370,7 +370,8 @@ def test_image_type_label(
             metadata["Labels"]["com.suse.image-type"] == "sle-bci"
         ), "sle-bci images must be marked as such"
 
-
+# XFAIL test added
+@pytest.mark.xfail(reason="XfailXpass-suplev",strict=False)
 @pytest.mark.parametrize(
     "container_data",
     [cont for cont in ALL_CONTAINERS if cont != BASE_CONTAINER],
@@ -386,6 +387,7 @@ def test_supportlevel_label(
     assert (
         metadata["Labels"]["com.suse.supportlevel"] == "techpreview"
     ), "images must be marked as techpreview"
+
 
 
 @pytest.mark.parametrize(
@@ -443,3 +445,5 @@ def test_reference(
         ref = f"{name}:{version}"
 
     LOCALHOST.run_expect([0], f"{container_runtime.runner_binary} pull {ref}")
+
+

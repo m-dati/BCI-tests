@@ -14,9 +14,6 @@ from bci_tester.runtime_choice import DOCKER_SELECTED
 
 CONTAINER_IMAGES = [INIT_CONTAINER]
 
-@pytest.mark.xfail()
-def test_soft_fail_init_chk():
-    pytest.xfail("init. Soft Fail test")
 
 
 @pytest.mark.skipif(
@@ -28,7 +25,8 @@ class TestSystemd:
     """
     systemd test module for the bci-init container.
     """
-
+### xfail checks ###
+    @pytest.mark.xfail(reason="XfailXpass-sysd",strict=False)
     def test_systemd_present(self, auto_container):
         """Check that :command:`systemctl` is in ``$PATH``, that :command:`systemctl
         status` works and that :file:`/etc/machine-id` exists.
@@ -37,6 +35,8 @@ class TestSystemd:
         assert auto_container.connection.file("/etc/machine-id").exists
         assert auto_container.connection.run_expect([0], "systemctl status")
 
+### xfail checks ###
+    @pytest.mark.xfail(reason="XfailXpass-boott",strict=False)
     def test_systemd_boottime(self, auto_container):
         """Ensure the container startup time is below 5 seconds"""
 
@@ -182,6 +182,7 @@ class TestSystemd:
             "No sessions" in loginctl.stdout
         ), "Assert no sessions are present failed"
 
+
     @staticmethod
     def _split_values(output: str, sep: str = ":") -> Dict[str, str]:
         """Auxilliary function to process the given output into a key:value map, one entry by line"""
@@ -192,3 +193,4 @@ class TestSystemd:
                 name, value = tmp[0].strip(), tmp[1].strip()
                 ret[name] = value
         return ret
+
